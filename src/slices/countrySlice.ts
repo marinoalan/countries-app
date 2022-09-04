@@ -51,6 +51,42 @@ const countrySlice = createSlice({
       const countryCode = getRandomWorldCountryCode(state.countryCodes);
       state.countryCode = countryCode;
     },
+    setAfricaCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.africa
+      );
+    },
+    setAntarcticaCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.antarctica
+      );
+    },
+    setAsiaCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.asia
+      );
+    },
+    setEuropeCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.europe
+      );
+    },
+    setNorthAmericaCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.northAmerica
+      );
+    },
+    setOceaniaCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.oceania
+      );
+    },
     setSouthAmericaCountryCode: (state) => {
       state.countryCode = getRandomCountryCodeFromContinent(
         state.countryCodes,
@@ -68,8 +104,17 @@ const countrySlice = createSlice({
   },
 });
 
-export const { setWorldCountryCodes, setWorldCountryCode } =
-  countrySlice.actions;
+export const {
+  setWorldCountryCodes,
+  setWorldCountryCode,
+  setAfricaCountryCode,
+  setAntarcticaCountryCode,
+  setAsiaCountryCode,
+  setEuropeCountryCode,
+  setNorthAmericaCountryCode,
+  setOceaniaCountryCode,
+  setSouthAmericaCountryCode,
+} = countrySlice.actions;
 
 export const selectCountryCodeState: (state: any) => string | undefined = (
   state: any

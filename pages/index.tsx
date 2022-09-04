@@ -4,6 +4,13 @@ import { camelCase, chain, last } from 'lodash';
 import Country from '../src/components/Country';
 import { wrapper } from '../src/store';
 import {
+  setAfricaCountryCode,
+  setAntarcticaCountryCode,
+  setAsiaCountryCode,
+  setEuropeCountryCode,
+  setNorthAmericaCountryCode,
+  setOceaniaCountryCode,
+  setSouthAmericaCountryCode,
   setWorldCountryCode,
   setWorldCountryCodes,
 } from '../src/slices/countrySlice';
@@ -110,7 +117,7 @@ const Home: NextPage = () => {
       <Country />
       <button
         onClick={() => {
-          dispatch(setWorldCountryCode());
+          dispatch(setOceaniaCountryCode());
         }}
       >
         Get random country
