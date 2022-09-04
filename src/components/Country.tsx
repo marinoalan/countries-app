@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import ICountry from '../../interfaces/ICountry';
 import { useGetCountryByCodeQuery } from '../api/countriesApi';
 import dynamic from 'next/dynamic';
+import { useSelector } from 'react-redux';
+import { selectCountryCodeState } from '../slices/countrySlice';
 
 const ImageContainer = styled.div`
   position: relative;
@@ -13,15 +15,34 @@ const ImageContainer = styled.div`
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 
-const Country: FC<{ countryCode: string }> = ({ countryCode }) => {
-  const { data, isLoading, error } = useGetCountryByCodeQuery(countryCode);
-  if (isLoading) return <p>Is Loading...</p>;
+const Country = () => {
+  const countryCode = useSelector(selectCountryCodeState);
+  if (countryCode === undefined) return null;
+  return <CountryWithData countryCode={countryCode} />;
+};
+
+const CountryWithData = ({ countryCode }: { countryCode: string }) => {
+  const { data, isLoading, error, isFetching } =
+    useGetCountryByCodeQuery(countryCode);
+
+  if (isLoading) {
+    console.log('IS LOADING');
+    return <p>Is Loading...</p>;
+  }
+
+  if (isFetching) {
+    console.log('IS FETCHING', isFetching);
+  }
   if (error) return <p>There was an error...</p>;
   const response = data as ICountry;
   return (
     <>
       <Suspense fallback={`Loading...`}>
-        <Map latlng={response.latlng} countryName={response.name.common} />
+        <Map
+          latlng={response.latlng}
+          countryName={response.name.common}
+          flag={response.flag}
+        />
       </Suspense>
 
       <ImageContainer>
@@ -38,13 +59,18 @@ const Country: FC<{ countryCode: string }> = ({ countryCode }) => {
       </div>
       <div>
         <h1>
-          {response.capital.length > 1 ? 'Capital cities' : 'Capital city'}
+          {response.capital.length > 1 ? 'Capital cities' : 'Capital city'}:
         </h1>
         <p>{response.capital.join(' - ')}</p>
       </div>
 
       <div>
-        <h1>Languages:</h1>
+        <h1>
+          {Object.values(response.languages).length > 1
+            ? 'Languages'
+            : 'Language'}
+          :
+        </h1>
         <p>{Object.values(response.languages).join(' - ')}</p>
       </div>
     </>

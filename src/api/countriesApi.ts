@@ -6,20 +6,13 @@ const API = 'https://restcountries.com/v3.1';
 const filteredFieldsOnGetCountryByCode = [
   'capital',
   'flags',
+  'flag',
   'languages',
   'latlng',
   'continents',
   'capital',
   'name',
 ];
-
-// const getCountryByCodeQuery = (builder) =>
-//   builder.query<>({
-//     query: (countryCode: string) => ({
-//       url: `/alpha/${countryCode}`,
-//       params: { fields: filteredFieldsOnGetCountryByCode.join(',') },
-//     }),
-//   });
 
 export const countriesApi = createApi({
   reducerPath: 'countriesApi',

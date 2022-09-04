@@ -15,13 +15,19 @@ function ChangeView({ position }: { position: LatLngExpression }) {
   return null;
 }
 
-const Map: FC<{ latlng: [string, string]; countryName: string }> = ({
-  latlng,
-  countryName,
-}) => {
+const Map: FC<{
+  latlng: [string, string];
+  countryName: string;
+  flag: string;
+}> = ({ latlng, countryName, flag }) => {
   const position: LatLngExpression = latlng.map(Number) as LatLngExpression;
   return (
-    <MapContainer center={position} zoom={4} style={{ height: 300 }}>
+    <MapContainer
+      center={position}
+      scrollWheelZoom={false}
+      zoom={4}
+      style={{ height: 300 }}
+    >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -34,7 +40,7 @@ const Map: FC<{ latlng: [string, string]; countryName: string }> = ({
         })}
       >
         <Tooltip direction='top' offset={[0, -20]} opacity={1} permanent>
-          {countryName}
+          {flag} {countryName}
         </Tooltip>
       </Marker>
       <ChangeView position={position} />

@@ -26,6 +26,7 @@ interface ICountry {
   capital: string[];
   languages: ICountryLanguage;
   latlng: [string, string];
+  flag: string;
 }
 
 export default ICountry;

@@ -1,13 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
+import { createWrapper } from 'next-redux-wrapper';
 import { countriesApi } from './api/countriesApi';
+import countryReducer from './slices/countrySlice';
 
-export const store = configureStore({
-  reducer: {
-    [countriesApi.reducerPath]: countriesApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(countriesApi.middleware),
-});
+export const makeStore = () =>
+  configureStore({
+    reducer: {
+      [countriesApi.reducerPath]: countriesApi.reducer,
+      country: countryReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(countriesApi.middleware),
+  });
 
-setupListeners(store.dispatch);
+export const wrapper = createWrapper(makeStore);
