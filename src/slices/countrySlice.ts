@@ -1,18 +1,40 @@
 import { random } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import IWorldCountryCodes from '../../interfaces/IWorldCountryCodes';
+import IWorldContinents from '../../interfaces/IWorldContinents';
+import IContinentRange from '../../interfaces/IContinentRange';
 
-const getRandomCountryCode = (countryCodes: string[]) => {
+const getRandomWorldCountryCode = (countryCodes: string[]) => {
   const randomNumber = random(countryCodes.length - 1);
   return countryCodes[randomNumber];
 };
 
-interface CountryState {
+const getRandomCountryCodeFromContinent = (
+  countryCodes: string[],
+  continentRange: IContinentRange
+) => {
+  const { fromPosition, toPosition } = continentRange;
+  const randomNumber = random(fromPosition as number, toPosition as number);
+  return countryCodes[randomNumber];
+};
+
+interface ICountryState {
+  continents: IWorldContinents;
   countryCodes: string[];
   countryCode?: string;
 }
 
-const initialState: CountryState = {
+const initialState: ICountryState = {
+  continents: {
+    africa: {},
+    antarctica: {},
+    asia: {},
+    europe: {},
+    northAmerica: {},
+    oceania: {},
+    southAmerica: {},
+  },
   countryCodes: [],
 };
 
@@ -20,12 +42,20 @@ const countrySlice = createSlice({
   name: 'country',
   initialState,
   reducers: {
-    setCountryCodes: (state, action) => {
-      state.countryCodes = action.payload;
+    setWorldCountryCodes: (state, action) => {
+      const { continents, countryCodes } = action.payload as IWorldCountryCodes;
+      state.continents = continents;
+      state.countryCodes = countryCodes;
     },
-    setCountryCode: (state) => {
-      const countryCode = getRandomCountryCode(state.countryCodes);
+    setWorldCountryCode: (state) => {
+      const countryCode = getRandomWorldCountryCode(state.countryCodes);
       state.countryCode = countryCode;
+    },
+    setSouthAmericaCountryCode: (state) => {
+      state.countryCode = getRandomCountryCodeFromContinent(
+        state.countryCodes,
+        state.continents.southAmerica
+      );
     },
   },
   extraReducers: {
@@ -38,10 +68,8 @@ const countrySlice = createSlice({
   },
 });
 
-export const { setCountryCodes, setCountryCode } = countrySlice.actions;
-
-export const selectCountryCodesState: (state: any) => string[] = (state: any) =>
-  state.country.countryCodes;
+export const { setWorldCountryCodes, setWorldCountryCode } =
+  countrySlice.actions;
 
 export const selectCountryCodeState: (state: any) => string | undefined = (
   state: any
