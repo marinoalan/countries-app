@@ -132,25 +132,33 @@ const areas = [
   { area: 'world', setCountryCode: setWorldCountryCode },
 ];
 
+const ContinentsContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+`;
+
 const Home: NextPage = () => {
   const dispatch = useDispatch();
   return (
     <>
-      {areas.map(({ area, setCountryCode }) => (
-        <Button
-          key={area}
-          onClick={() => {
-            dispatch(setCountryCode());
-          }}
-        >
-          <Image
-            src={`/${area}.png`}
-            alt={`${startCase(area)} map`}
-            width={64}
-            height={64}
-          />
-        </Button>
-      ))}
+      <ContinentsContainer>
+        {areas.map(({ area, setCountryCode }) => (
+          <Button
+            key={area}
+            onClick={() => {
+              dispatch(setCountryCode());
+            }}
+          >
+            <Image
+              src={`/${area}.png`}
+              alt={`${startCase(area)} map`}
+              width={64}
+              height={64}
+            />
+          </Button>
+        ))}
+      </ContinentsContainer>
 
       <Country />
     </>
