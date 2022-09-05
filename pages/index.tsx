@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { NextPage } from 'next';
-import { camelCase, chain, last } from 'lodash';
+import { camelCase, chain, last, startCase } from 'lodash';
 import Country from '../src/components/Country';
 import { wrapper } from '../src/store';
 import {
@@ -18,6 +18,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import IWorldCountryCodes from '../interfaces/IWorldCountryCodes';
 import TContinent from '../types/TContinent';
 import IWorldContinents from '../interfaces/IWorldContinents';
+import Image from 'next/image';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  border-radius: 50%;
+  border: 3px solid black;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 interface ITransformContinent {
   continentName: string;
@@ -110,18 +121,38 @@ export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   };
 });
 
+const areas = [
+  { area: 'africa', setCountryCode: setAfricaCountryCode },
+  { area: 'antarctica', setCountryCode: setAntarcticaCountryCode },
+  { area: 'asia', setCountryCode: setAsiaCountryCode },
+  { area: 'europe', setCountryCode: setEuropeCountryCode },
+  { area: 'north-america', setCountryCode: setNorthAmericaCountryCode },
+  { area: 'oceania', setCountryCode: setOceaniaCountryCode },
+  { area: 'south-america', setCountryCode: setSouthAmericaCountryCode },
+  { area: 'world', setCountryCode: setWorldCountryCode },
+];
+
 const Home: NextPage = () => {
   const dispatch = useDispatch();
   return (
     <>
+      {areas.map(({ area, setCountryCode }) => (
+        <Button
+          key={area}
+          onClick={() => {
+            dispatch(setCountryCode());
+          }}
+        >
+          <Image
+            src={`/${area}.png`}
+            alt={`${startCase(area)} map`}
+            width={64}
+            height={64}
+          />
+        </Button>
+      ))}
+
       <Country />
-      <button
-        onClick={() => {
-          dispatch(setOceaniaCountryCode());
-        }}
-      >
-        Get random country
-      </button>
     </>
   );
 };
