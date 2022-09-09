@@ -1,19 +1,44 @@
 import Image from 'next/image';
-import { FC, Suspense } from 'react';
+import { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import ICountry from '../../interfaces/ICountry';
 import { useGetCountryByCodeQuery } from '../api/countriesApi';
 import dynamic from 'next/dynamic';
 import { useSelector } from 'react-redux';
 import { selectCountryCodeState } from '../slices/countrySlice';
+import Grid from './Grid';
+import { isEmpty } from 'lodash';
 
 const ImageContainer = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
+  max-width: 320px;
 `;
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
+
+const CountryImage = ({ src }: { src: string }) => {
+  const [imageSize, setImageSize] = useState<{
+    imageWidth?: number;
+    imageHeight?: number;
+  }>({});
+  return (
+    <ImageContainer>
+      <Image
+        {...(isEmpty(imageSize)
+          ? { layout: 'fill', objectFit: 'contain' }
+          : { width: imageSize.imageWidth, height: imageSize.imageHeight })}
+        alt='Flag image'
+        onLoadingComplete={({ naturalWidth, naturalHeight }) => {
+          setImageSize({
+            imageWidth: naturalWidth,
+            imageHeight: naturalHeight,
+          });
+        }}
+        src={src}
+      />
+    </ImageContainer>
+  );
+};
 
 const Country = () => {
   const countryCode = useSelector(selectCountryCodeState);
@@ -37,7 +62,18 @@ const CountryWithData = ({ countryCode }: { countryCode: string }) => {
   const response = data as ICountry;
   return (
     <>
-      <Suspense fallback={`Loading...`}>
+      <Grid>
+        <Suspense fallback={`Loading map...`}>
+          <Map
+            latlng={response.latlng}
+            countryName={response.name.common}
+            flag={response.flag}
+          />
+        </Suspense>
+        <CountryImage src={response.flags.png} />
+      </Grid>
+
+      {/* <Suspense fallback={`Loading map...`}>
         <Map
           latlng={response.latlng}
           countryName={response.name.common}
@@ -72,7 +108,7 @@ const CountryWithData = ({ countryCode }: { countryCode: string }) => {
           :
         </h1>
         <p>{Object.values(response.languages).join(' - ')}</p>
-      </div>
+      </div> */}
     </>
   );
 };

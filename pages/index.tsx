@@ -122,41 +122,76 @@ export const getStaticProps = wrapper.getStaticProps((store) => async () => {
 });
 
 const areas = [
-  { area: 'africa', setCountryCode: setAfricaCountryCode },
-  { area: 'antarctica', setCountryCode: setAntarcticaCountryCode },
-  { area: 'asia', setCountryCode: setAsiaCountryCode },
-  { area: 'europe', setCountryCode: setEuropeCountryCode },
-  { area: 'north-america', setCountryCode: setNorthAmericaCountryCode },
-  { area: 'oceania', setCountryCode: setOceaniaCountryCode },
-  { area: 'south-america', setCountryCode: setSouthAmericaCountryCode },
-  { area: 'world', setCountryCode: setWorldCountryCode },
+  { area: 'world', name: 'World', setCountryCode: setWorldCountryCode },
+  {
+    area: 'north-america',
+    name: 'North America',
+    setCountryCode: setNorthAmericaCountryCode,
+  },
+  {
+    area: 'south-america',
+    name: 'South America',
+    setCountryCode: setSouthAmericaCountryCode,
+  },
+  { area: 'europe', name: 'Europe', setCountryCode: setEuropeCountryCode },
+  { area: 'asia', name: 'Asia', setCountryCode: setAsiaCountryCode },
+  { area: 'oceania', name: 'Oceania', setCountryCode: setOceaniaCountryCode },
+  { area: 'africa', name: 'Africa', setCountryCode: setAfricaCountryCode },
+  {
+    area: 'antarctica',
+    name: 'Antarctica',
+    setCountryCode: setAntarcticaCountryCode,
+  },
 ];
 
 const ContinentsContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: 2rem;
+`;
+
+const ContinentTitle = styled.h3`
+  text-align: center;
+  margin: 0;
+  font-size: 1.125rem;
+`;
+
+const HomeTitle = styled.h1`
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+`;
+
+const ContinentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Home: NextPage = () => {
   const dispatch = useDispatch();
   return (
     <>
+      <HomeTitle>GET RANDOM COUNTRY</HomeTitle>
       <ContinentsContainer>
-        {areas.map(({ area, setCountryCode }) => (
-          <Button
-            key={area}
-            onClick={() => {
-              dispatch(setCountryCode());
-            }}
-          >
-            <Image
-              src={`/${area}.png`}
-              alt={`${startCase(area)} map`}
-              width={64}
-              height={64}
-            />
-          </Button>
+        {areas.map(({ area, name, setCountryCode }) => (
+          <ContinentContainer key={area}>
+            <ContinentTitle>{name}</ContinentTitle>
+            <Button
+              onClick={() => {
+                dispatch(setCountryCode());
+              }}
+            >
+              <Image
+                src={`/${area}.png`}
+                alt={`${startCase(area)} map`}
+                width={64}
+                height={64}
+              />
+            </Button>
+          </ContinentContainer>
         ))}
       </ContinentsContainer>
 
