@@ -22,7 +22,12 @@ const Map: FC<{
 }> = ({ latlng, countryName, flag }) => {
   const position: LatLngExpression = latlng.map(Number) as LatLngExpression;
   return (
-    <MapContainer center={position} scrollWheelZoom={false} zoom={4}>
+    <MapContainer
+      center={position}
+      scrollWheelZoom={false}
+      zoom={4}
+      style={{ width: '100%', height: '100%' }}
+    >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
